@@ -6,6 +6,12 @@ on:
     # file paths to consider in the event. Optional; defaults to all.
     paths:
       - package.json
+  pull_request:
+    branches:
+    - master
+    # file paths to consider in the event. Optional; defaults to all.
+    paths:
+      - package.json
 
 jobs:
   icon_automation:
