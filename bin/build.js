@@ -15,16 +15,8 @@ const rootDir = path.join(__dirname, '..')
 const srcDir = path.join(rootDir, 'src')
 const iconsDir = path.join(rootDir, 'src/icons')
 
-// generate icons.js and icons.d.ts file
-const generateIconsIndex = () => {
-  if (!fs.existsSync(srcDir)) {
-    fs.mkdirSync(srcDir)
-    fs.mkdirSync(iconsDir)
-  } else if (!fs.existsSync(iconsDir)) {
-    fs.mkdirSync(iconsDir)
-  }
 
-  const initialTypeDefinitions = `/// <reference types="react" />
+const initialTypeDefinitions = `/// <reference types="react" />
   import { ComponentType, SVGAttributes } from 'react';
 
   interface Props extends SVGAttributes<SVGElement> {
@@ -34,6 +26,15 @@ const generateIconsIndex = () => {
 
   type Icon = ComponentType<Props>;
   `;
+
+// generate icons.js and icons.d.ts file
+const generateIconsIndex = () => {
+  if (!fs.existsSync(srcDir)) {
+    fs.mkdirSync(srcDir)
+    fs.mkdirSync(iconsDir)
+  } else if (!fs.existsSync(iconsDir)) {
+    fs.mkdirSync(iconsDir)
+  }
 
   fs.writeFileSync(path.join(rootDir, 'src', 'icons.js'), '', 'utf-8');
   fs.writeFileSync(
@@ -101,6 +102,14 @@ const appendToIconsIndex = ({ComponentName, name}) => {
     exportTypeString,
     'utf-8',
   );
+
+  fs.writeFileSync(
+    path.join(rootDir, `${ComponentName}.d.ts`),
+    `${initialTypeDefinitions}
+      declare const _default: Icon;
+      export default _default;`,
+    'utf-8',
+  )
 }
 
 generateIconsIndex()
