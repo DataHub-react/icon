@@ -8,6 +8,7 @@ const { parseName } = require('./utils')
 const defaultStyle = process.env.npm_package_config_style || 'stroke'
 const { getAttrs, getElementCode } = require('./template')
 const icons = require('../src/data.json')
+const upperCamelCase = require("uppercamelcase")
 
 const rootDir = path.join(__dirname, '..')
 
@@ -64,7 +65,7 @@ const generateIconCode = async ({name}) => {
   const names = parseName(name, defaultStyle)
   console.log(names)
   const location = path.join(rootDir, 'src/svg', `${names.name}.svg`)
-  const destination = path.join(rootDir, 'src/icons', `${names.name}.js`)
+  const destination = path.join(rootDir, 'src/icons', `${upperCamelCase(names.name)}.js`)
   const code = fs.readFileSync(location)
   const svgCode = await processSvg(code)
   const ComponentName = names.componentName
@@ -89,7 +90,7 @@ const generateIconCode = async ({name}) => {
 
 // append export code to icons.js
 const appendToIconsIndex = ({ComponentName, name}) => {
-  const exportString = `export { default as ${ComponentName} } from './icons/${name}';\r\n`;
+  const exportString = `export { default as ${ComponentName} } from './icons/${upperCamelCase(name)}';\r\n`;
   fs.appendFileSync(
     path.join(rootDir, 'src', 'icons.js'),
     exportString,
