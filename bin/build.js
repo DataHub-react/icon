@@ -37,7 +37,7 @@ const generateIconsIndex = () => {
     fs.mkdirSync(iconsDir)
   }
 
-  fs.writeFileSync(path.join(rootDir, 'src', 'icons.js'), '', 'utf-8');
+  fs.writeFileSync(path.join(rootDir, 'src', 'icons.js'), 'import React from "react";\r\n', 'utf-8');
   fs.writeFileSync(
     path.join(rootDir, 'src', 'icons.d.ts'),
     initialTypeDefinitions,
@@ -90,7 +90,7 @@ const generateIconCode = async ({name}) => {
 
 // append export code to icons.js
 const appendToIconsIndex = ({ComponentName, name}) => {
-  const exportString = `export { default as ${ComponentName} } from './icons/${upperCamelCase(name)}';\r\n`;
+  const exportString = `export const ${ComponentName} = React.lazy(() => import( /* webpackChunkName: "datahub.icon.${ComponentName}" */ './icons/${upperCamelCase(name)}'));\r\n`;
   fs.appendFileSync(
     path.join(rootDir, 'src', 'icons.js'),
     exportString,
