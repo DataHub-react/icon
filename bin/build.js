@@ -37,7 +37,7 @@ const generateIconsIndex = () => {
     fs.mkdirSync(iconsDir)
   }
 
-  fs.writeFileSync(path.join(rootDir, 'src', 'icons.js'), 'import React from "react";\r\n', 'utf-8');
+  fs.writeFileSync(path.join(rootDir, 'src', 'icons.js'), 'import React, { Suspense } from "react";\r\n', 'utf-8');
   fs.writeFileSync(
     path.join(rootDir, 'src', 'icons.d.ts'),
     initialTypeDefinitions,
@@ -90,7 +90,15 @@ const generateIconCode = async ({name}) => {
 
 // append export code to icons.js
 const appendToIconsIndex = ({ComponentName, name}) => {
-  const exportString = `export const ${ComponentName} = React.lazy(() => import( /* webpackChunkName: "datahub.icon.${ComponentName}" */ './icons/${upperCamelCase(name)}'));\r\n`;
+  // const exportString = `export const ${ComponentName} = React.lazy(() => import( /* webpackChunkName: "datahub.icon.${ComponentName}" */ './icons/${upperCamelCase(name)}'));\r\n`;
+  const exportString = `export const ${ComponentName} = (props) => {
+    const { fallback = null } = props
+    let C = React.lazy(() => import( /* webpackChunkName: "datahub.icon.${ComponentName}" */ './icons/${upperCamelCase(name)}'));
+    return (<Suspense fallback={fallback}>
+      <C/>
+    </Suspense>)
+  };
+  `;
   fs.appendFileSync(
     path.join(rootDir, 'src', 'icons.js'),
     exportString,
