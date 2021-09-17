@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import styled from 'styled-components'
 import * as icons from './icons'
 import Header from './components/Header'
@@ -19,20 +19,22 @@ class List extends React.Component {
     return (
       <div>
         <Header/>
-        <Container>
-          {
-            Object.keys(icons)
-              .map((key, index) => {
-                const Icon = icons[key]
-                return <li key={index}>
-                  <IconWrapper>
-                    <Icon/>
-                    <span onDoubleClick={() => handleCopyIcon(key)}>{key}</span>
-                  </IconWrapper>
-                </li>
-              })
-          }
-        </Container>
+        <Suspense fallback="loading">
+          <Container>
+            {
+              Object.keys(icons)
+                .map((key, index) => {
+                  const Icon = icons[key]
+                  return <li key={index}>
+                    <IconWrapper>
+                      <Icon/>
+                      <span onDoubleClick={() => handleCopyIcon(key)}>{key}</span>
+                    </IconWrapper>
+                  </li>
+                })
+            }
+          </Container>
+        </Suspense>
       </div>
     )
   }

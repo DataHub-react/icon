@@ -21,8 +21,8 @@ module.exports = [
   {
     input: resolveFile('src/main.js'),
     output: {
-      file: resolveFile('docs/index.js'),
-      format: 'umd',
+      dir: "docs",
+      format: 'amd', // iife & umd dont support code splitting
     },
     plugins: [
       copy({
