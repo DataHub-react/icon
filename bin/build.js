@@ -92,10 +92,10 @@ const generateIconCode = async ({name}) => {
 const appendToIconsIndex = ({ComponentName, name}) => {
   // const exportString = `export const ${ComponentName} = React.lazy(() => import( /* webpackChunkName: "datahub.icon.${ComponentName}" */ './icons/${upperCamelCase(name)}'));\r\n`;
   const exportString = `export const ${ComponentName} = (props) => {
-    const { fallback = null } = props
+    const { fallback = null, ...otherProps } = props
     let C = React.lazy(() => import( /* webpackChunkName: "datahub.icon.${ComponentName}" */ './icons/${upperCamelCase(name)}'));
     return (<Suspense fallback={fallback}>
-      <C/>
+      <C {...otherProps}/>
     </Suspense>)
   };
   `;
